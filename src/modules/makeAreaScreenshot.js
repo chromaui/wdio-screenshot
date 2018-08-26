@@ -13,7 +13,7 @@ import ScreenDimension from '../utils/ScreenDimension';
 import normalizeScreenshot from '../utils/normalizeScreenshot';
 
 const log = debug('wdio-screenshot:makeAreaScreenshot');
-const tmpDir = path.join(__dirname, '..', '..', '.tmp');
+const tmpDir = process.env.WDIO_SCREENSHOT_TMP || path.join(__dirname, '..', '..', '.tmp');
 
 async function storeScreenshot(browser, screenDimensions, cropDimensions, base64Screenshot, filePath) {
   const normalizedBase64Screenshot = await normalizeScreenshot(browser, screenDimensions, base64Screenshot);
