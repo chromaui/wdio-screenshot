@@ -22,7 +22,8 @@
     "server": "http-server test/fixture/web -p 3000",
     "deploy-integration-tests": "gh-pages -d test/fixture/web",
     "prepublish": "npm run build",
-    "release": "np"
+    "release": "np",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
