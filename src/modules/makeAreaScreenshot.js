@@ -44,8 +44,8 @@ export default async function makeAreaScreenshot(browser, startX, startY, endX, 
     const cropImages = [];
     const screenshotPromises = [];
 
-    log('set page height to %s px', screenDimension.getDocumentHeight());
-    await browser.execute(pageHeight, `${screenDimension.getDocumentHeight()}px`);
+    // log('set page height to %s px', screenDimension.getDocumentHeight());
+    // await browser.execute(pageHeight, `${screenDimension.getDocumentHeight()}px`);
 
     let loop = false;
     do {
