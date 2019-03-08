@@ -5,8 +5,8 @@ import saveViewportScreenshot from './commands/saveViewportScreenshot';
 import makeDocumentScreenshot from './modules/makeDocumentScreenshot';
 import makeElementScreenshot from './modules/makeElementScreenshot';
 import makeViewportScreenshot from './modules/makeViewportScreenshot';
-import beforeScreenshot from './module/beforeScreenshot';
-import afterScreenshot from './module/afterScreenshot';
+import beforeScreenshot from './modules/beforeScreenshot';
+import afterScreenshot from './modules/afterScreenshot';
 
 class WDIOScreenshot {
   constructor(browser, options) {
