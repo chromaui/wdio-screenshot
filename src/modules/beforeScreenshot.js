@@ -28,13 +28,15 @@ export default async function beforeScreenshot(browser, options) {
   }
 
   // scroll back to start
-  const x  = 0;
+  const x = 0;
   const y = 0;
   log('scroll back to start x: %s, y: %s', x, y);
   await browser.execute(scroll, x, y);
 
-  // wait a bit for browser render
-  const pause = 200;
-  log('wait %s ms for browser render', pause);
-  await browser.pause(pause);
+  if (!options.noPause) {
+    // wait a bit for browser render
+    const pause = 200;
+    log('wait %s ms for browser render', pause);
+    await browser.pause(pause);
+  }
 }

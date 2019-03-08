@@ -4,7 +4,7 @@ import debug from 'debug';
 
 import ScreenshotStrategyManager from '../utils/ScreenshotStrategyManager';
 import getScreenDimensions from '../scripts/getScreenDimensions';
-import virtualScroll from '../scripts/virtualScroll';
+import scroll from '../scripts/scroll';
 import pageHeight from '../scripts/pageHeight';
 import generateUUID from '../utils/generateUUID';
 import saveBase64Image from '../utils/saveBase64Image';
@@ -15,9 +15,25 @@ import normalizeScreenshot from '../utils/normalizeScreenshot';
 const log = debug('wdio-screenshot:makeAreaScreenshot');
 const tmpDir = process.env.WDIO_SCREENSHOT_TMP || path.join(__dirname, '..', '..', '.tmp');
 
-async function storeScreenshot(browser, screenDimensions, cropDimensions, base64Screenshot, filePath) {
-  const normalizedBase64Screenshot = await normalizeScreenshot(browser, screenDimensions, base64Screenshot);
-  log('crop screenshot with width: %s, height: %s, offsetX: %s, offsetY: %s', cropDimensions.getWidth(), cropDimensions.getHeight(), cropDimensions.getX(), cropDimensions.getY());
+async function storeScreenshot(
+  browser,
+  screenDimensions,
+  cropDimensions,
+  base64Screenshot,
+  filePath
+) {
+  const normalizedBase64Screenshot = await normalizeScreenshot(
+    browser,
+    screenDimensions,
+    base64Screenshot
+  );
+  log(
+    'crop screenshot with width: %s, height: %s, offsetX: %s, offsetY: %s',
+    cropDimensions.getWidth(),
+    cropDimensions.getHeight(),
+    cropDimensions.getX(),
+    cropDimensions.getY()
+  );
 
   const croppedBase64Screenshot = await cropImage(normalizedBase64Screenshot, cropDimensions);
 
@@ -25,7 +41,7 @@ async function storeScreenshot(browser, screenDimensions, cropDimensions, base64
 }
 
 export default async function makeAreaScreenshot(browser, startX, startY, endX, endY) {
-  log('requested a screenshot for the following area: %j', {startX, startY, endX, endY});
+  log('requested a screenshot for the following area: %j', { startX, startY, endX, endY });
 
   const screenDimensions = (await browser.execute(getScreenDimensions)).value;
   log('detected screenDimensions %j', screenDimensions);
@@ -52,7 +68,7 @@ export default async function makeAreaScreenshot(browser, startX, startY, endX, 
       const { x, y, indexX, indexY } = screenshotStrategy.getScrollPosition();
       log('scroll to coordinates x: %s, y: %s for index x: %s, y: %s', x, y, indexX, indexY);
 
-      await browser.execute(virtualScroll, x, y, false);
+      await browser.execute(scroll, x, y);
       await browser.pause(100);
 
       log('take screenshot');
@@ -60,9 +76,11 @@ export default async function makeAreaScreenshot(browser, startX, startY, endX, 
       const cropDimensions = screenshotStrategy.getCropDimensions();
       const filePath = path.join(dir, `${indexY}-${indexX}.png`);
 
-      screenshotPromises.push(storeScreenshot(browser, screenDimension, cropDimensions, base64Screenshot, filePath));
+      screenshotPromises.push(
+        storeScreenshot(browser, screenDimension, cropDimensions, base64Screenshot, filePath)
+      );
 
-      if(!Array.isArray(cropImages[indexY])) {
+      if (!Array.isArray(cropImages[indexY])) {
         cropImages[indexY] = [];
       }
 
@@ -70,10 +88,10 @@ export default async function makeAreaScreenshot(browser, startX, startY, endX, 
 
       loop = screenshotStrategy.hasNextScrollPosition();
       screenshotStrategy.moveToNextScrollPosition();
-    } while (loop)
+    } while (loop);
 
     const [mergedBase64Screenshot] = await Promise.all([
-      Promise.resolve().then(async() => {
+      Promise.resolve().then(async () => {
         await Promise.all(screenshotPromises);
         log('merge images togehter');
         const mergedBase64Screenshot = await mergeImages(cropImages);
@@ -81,23 +99,21 @@ export default async function makeAreaScreenshot(browser, startX, startY, endX, 
         await fsExtra.remove(dir);
         return mergedBase64Screenshot;
       }),
-      Promise.resolve().then(async() => {
+      Promise.resolve().then(async () => {
         log('reset page height');
         await browser.execute(pageHeight, '');
 
         log('revert scroll to x: %s, y: %s', 0, 0);
-        await browser.execute(virtualScroll, 0, 0, true);
-      })
+        await browser.execute(scroll, 0, 0);
+      }),
     ]);
 
     return mergedBase64Screenshot;
-
-  } catch(e) {
+  } catch (e) {
     try {
       await fsExtra.remove(dir);
-    } catch(e) {}
+    } catch (e) {}
 
     throw e;
   }
-
 }
