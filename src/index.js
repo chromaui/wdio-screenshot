@@ -5,12 +5,13 @@ import saveViewportScreenshot from './commands/saveViewportScreenshot';
 import makeDocumentScreenshot from './modules/makeDocumentScreenshot';
 import makeElementScreenshot from './modules/makeElementScreenshot';
 import makeViewportScreenshot from './modules/makeViewportScreenshot';
+import beforeScreenshot from './module/beforeScreenshot';
+import afterScreenshot from './module/afterScreenshot';
 
 class WDIOScreenshot {
-
   constructor(browser, options) {
     if (!browser) {
-      throw new Error('A WebdriverIO instance is needed to initialise wdio-screenshot')
+      throw new Error('A WebdriverIO instance is needed to initialise wdio-screenshot');
     }
 
     // add commands to WebdriverIO instance
@@ -30,4 +31,6 @@ export {
   makeDocumentScreenshot,
   makeElementScreenshot,
   makeViewportScreenshot,
+  beforeScreenshot,
+  afterScreenshot,
 };
