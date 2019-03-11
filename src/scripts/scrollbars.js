@@ -7,14 +7,14 @@ export default function scrollbars(enabled) {
   if (enabled) {
     document.documentElement.style['scrollbar-width'] = null;
     document.documentElement.style['-ms-overflow-style'] = null;
-    document.head.appendChild(document.__scrollbarsStyleTag);
-  } else {
-    document.documentElement.style['scrollbar-width'] = 'none';
-    document.documentElement.style['-ms-overflow-style'] = 'none';
     try {
       document.head.removeChild(document.__scrollbarsStyleTag);
     } catch (e) {
       // Already removed or never inserted, nothing to worry about
     }
+  } else {
+    document.documentElement.style['scrollbar-width'] = 'none';
+    document.documentElement.style['-ms-overflow-style'] = 'none';
+    document.head.appendChild(document.__scrollbarsStyleTag);
   }
 }
