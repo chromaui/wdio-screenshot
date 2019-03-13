@@ -7,11 +7,10 @@ const log = debug('wdio-screenshot:image');
 let gmInstalled = false;
 
 try {
-  gmInstalled = !!which.sync('gm');
-} catch(e) {}
+  gmInstalled = !!process.env.WDIO_SCREENSHOT_USE_IMAGEMAGICK || !!which.sync('gm');
+} catch (e) {}
 
 log(`Use image processing library: ${gmInstalled ? 'GraphicsMagick' : 'Jimp'}`);
-
 
 const { cropImage, mergeImages, scaleImage } = gmInstalled ? gm : jimp;
 export { cropImage, scaleImage, mergeImages };
