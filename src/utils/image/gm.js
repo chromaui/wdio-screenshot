@@ -6,7 +6,9 @@ import generateUUID from '../generateUUID';
 import CropDimension from '../CropDimension';
 
 const tmpDir = process.env.WDIO_SCREENSHOT_TMP || path.join(__dirname, '../../../.tmp');
-const gm = process.env.WDIO_SCREENSHOT_USE_IMAGEMAGICK ? gm.subClass({ imageMagick: true }) : gm;
+const gm = process.env.WDIO_SCREENSHOT_USE_IMAGEMAGICK
+  ? gmRaw.subClass({ imageMagick: true })
+  : gmRaw;
 
 /**
  * Crops an image
